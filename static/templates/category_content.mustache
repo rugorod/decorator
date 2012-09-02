@@ -1,0 +1,19 @@
+  <div class="page-header">
+    <h1>
+      {{catTitle}}
+      <small>
+	{{{catContent}}}
+      </small>
+    </h1>
+  </div>
+  <ul class="breadcrumb">
+    {{#tags}}
+      <li><a href="#/categorytag/{{catName}}/{{.}}">{{.}}</a> <span class="divider">/</span></li>
+    {{/tags}}
+    </ul>
+  <div>
+    <a href="#/category/{{catName}}?sort=1">По убыванию</a>
+    <a href="#/category/{{catName}}">По возрастанию</a>
+    <div class="admin-only"><a href="#/edit_category/{{catId}}">Редактировать раздел</a>
+    </div>
+  </div>
