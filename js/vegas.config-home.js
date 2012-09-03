@@ -7,6 +7,6 @@ $( function() {
 	    { src:'/img/slider/bg4.jpg', fade:1000 }
 	]
     })('overlay', {
-	src:'/img/overlays/11.png'
+	src:'/img/overlays/03.png'
     });
 });
