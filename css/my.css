@@ -16,12 +16,14 @@ body {
 }
 
 /*slider*/
-.slider {
-
-}
 
 .left {
+    left: 101%;
+}
 
+.carousel-control.right {
+    left: 101%;
+    top: 85%;
 }
 
 /*menu-dropdown*/
