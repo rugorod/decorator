@@ -6,6 +6,21 @@ body {
     font: 12px 'Droid Serif',serif;
 }
 
+/*logo*/
+.logo {
+    width: 0px;
+
+}
+
+/*slider*/
+.slider {
+
+}
+
+.slide-img {
+    width: 100%;
+}
+
 .home {
     position: absolute;
     top: 40px;
