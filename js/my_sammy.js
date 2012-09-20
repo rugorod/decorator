@@ -1,7 +1,7 @@
 (function($) {
     var app = $.sammy(function() {
 
-        this.use(Sammy.Mustache);
+        this.use(Sammy.Handlebars);
         this.use(Sammy.Template);
         this.use(Sammy.JSON);
         this.use(Sammy.Storage);
@@ -10,10 +10,69 @@
         var store = new Sammy.Store({name: 'mystore', element: '1', type: 'local'});
         var login = new Sammy.Store({name: 'login', element: '2', type: 'local'});
         var cache = new Sammy.Store({name: 'cache', element: '3', type: 'memory'});
-
+        this.use('Handlebars', 'mustache');
+        this.disable_push_state = true;
         this.clearTemplateCache();
         //this.setLocationProxy(new Sammy.PushLocationProxy(this));
         //this.setLocationProxy(new Sammy.DataLocationProxy(this, 'location', 'rel'));
+
+
+
+
+
+// based on the `#each` helper, requires jQuery (for jQuery.extend)
+Handlebars.registerHelper('each_hash', function(context, options) {
+    var fn = options.fn, inverse = options.inverse;
+    var ret = "";
+
+    if(typeof context === "object") {
+        for(var key in context) {
+            if(context.hasOwnProperty(key)) {
+                // clone the context so it's not
+                // modified by the template-engine when
+                // setting "_key"
+                var ctx = jQuery.extend(
+                    {"_key":key},
+                    context[key]);
+
+                ret = ret + fn(ctx);
+            }
+        }
+    } else {
+        ret = inverse(this);
+    }
+    return ret;
+});
+
+
+Handlebars.registerHelper('eachname', function(context, options) {
+  var ret = [];
+
+  if (context) {
+      ret ="another"
+      for(i in context) {
+          alert(i);
+          ret = ret.push (i);
+      }
+  }
+
+  return ret;
+});
+
+
+Handlebars.registerHelper('attachNames', function(items) {
+    var res = [];
+    if (items) {
+        for (i in items) {
+            alert(i);
+            res = res.push(i);
+        }
+        return res;
+    } else {
+        return [];
+    }
+});
+
 
         function newAlert() {
             var oldTitle = document.title;
@@ -35,6 +94,12 @@
         function checkLoggedIn() {
             // /session returns a JSON representation of the logged in user
             // or an empty object
+
+	    $.post('/json/checklogin', function(data) {
+		if (data == "fail") {
+		    login.clear("user");
+                }
+	    });
             if (login.get('user')) {
                 $('#menu_login').hide();
                 $('#menu_user').show();
@@ -45,7 +110,17 @@
                 $('#menu_user').hide();
                 $('.admin-only').hide();
             }
+
         };
+
+	this.get("#/delcategory/:cat", function() {
+	    var context = this;
+	    $.post("/json/delcategory", this.params, function(response) {
+                context.trigger('update-categories');
+                //             context.next(JSON.parse(response));
+            });
+	    this.redirect("#/");
+        });
 
 	this.get("#/category/:category", function() {
 	    var context = this;
@@ -83,6 +158,7 @@
 			            .replace('#main')
 			            .then(function () {
 				        $("#main").fadeIn('fast');
+	                                $('.nav li').removeClass('active');
 				        $('#cat_' + category).addClass('active');
                                         checkLoggedIn();
 	                            });
@@ -115,16 +191,17 @@
                                     "catId":cat.catId,
                                     "catContent":cat.catContent,
                                     "catName":category})
-                        .prependTo('#main');
+                        .replace('#premain');
                 });
 
 	    this.load(link + '?category=' + category + "&tag=" + tag, {"json":true})
 		.then(function(items) {
 		    $("#main").fadeIn('fast', function() {
                         context.renderEach('templates/item.mustache',items)
-			    .appendTo('#main')
+			    .replace('#main')
 			    .then(function () {
 				$("#main").fadeIn('fast');
+	                        $('.nav li').removeClass('active');
 				$('#cat_' + category).addClass('active');
                                 checkLoggedIn();
 	                    });
@@ -148,8 +225,8 @@
 	    var id = this.params['id'];
             var context = this;
             $('#premain').empty();
-            this.render('templates/edit_content.mustache',{'contentId':id})
-		.replace('#main');
+
+            this.contentId = id;
             this.load("/json/rawcontent?id=" + id, {"json":true})
 		.then(function(items) {
 		    $("#main").fadeOut('fast', function() {
@@ -161,8 +238,8 @@
         });
 	this.post("#/editpage/:id", function() {
 	    $.post("/json/editcontent", this.params, function(response) {
-//             context.next(JSON.parse(response));
-           });
+                //             context.next(JSON.parse(response));
+            });
 	    this.redirect("#/");
 	});
 
@@ -173,6 +250,19 @@
 	    $.post("/json/delitem", {"id": id}, function(response) {
                 if (response == "ok") {
                     context.redirect("#/category/" + cat);
+                }
+                //history.back();
+                //context.next(JSON.parse(response));
+            });
+	});
+
+	this.get("#/image/delete/:id/:image", function() {
+	    var context = this;
+            var image = this.params['image'];
+            var id = this.params['id'];
+	    $.post("/json/delimage", {"id": id, 'image': image}, function(response) {
+                if (response == "ok") {
+                    $("#image_"+image).hide();
                 }
                 //history.back();
                 //context.next(JSON.parse(response));
@@ -304,7 +394,10 @@
                 .replace("#main");
 	    this.load("/json/content?id=discount", {"json":true})
 		.render('templates/main.mustache')
-		.replace('#main');
+		.replace('#main')
+		.then(function () {
+                    checkLoggedIn();
+	        });
 	});
 
 	this.get("#/deliver", function() {
@@ -314,7 +407,10 @@
                 .replace("#main");
 	    this.load("/json/content?id=deliver", {"json":true})
 		.render('templates/main.mustache')
-		.replace('#main');
+		.replace('#main')
+		.then(function () {
+                    checkLoggedIn();
+	        });
 	});
 
 	this.get("#/contacts", function() {
@@ -324,7 +420,10 @@
                 .replace("#main");
 	    this.load("/json/content?id=contacts", {"json":true})
 		.render('templates/main.mustache')
-		.replace('#main');
+		.replace('#main')
+		.then(function () {
+                    checkLoggedIn();
+	        });
 	});
 
 	this.get("#/address", function() {
@@ -334,17 +433,30 @@
                 .replace("#main");
 	    this.load("/json/content?id=address", {"json":true})
 		.render('templates/main.mustache')
-		.replace('#main');
+		.replace('#main')
+		.then(function () {
+                    checkLoggedIn();
+	        });
         });
 
-	this.get("#/about", function() {
+	this.get("#/page/:page", function() {
+            var page = this.params['page'];
             $('#premain').empty();
-	    $('#menu_about').addClass('active');
-            this.render('templates/main.mustache', {"contentId":"about"})
-                .replace("#main");
-	    this.load("/json/content?id=about", {"json":true})
-		.render('templates/main.mustache')
-		.replace('#main');
+	    $('#menu_' + page).addClass('active');
+	    this.load("/json/content?id=" + page, {"json":true})
+                .then(function(items) {
+                    if (items == null)
+                    {
+                        this.render('templates/main.mustache', {"contentId":page})
+                            .replace("#main");
+                    } else {
+		        this.render('templates/main.mustache',items)
+		            .replace('#main')
+		            .then(function () {
+                                checkLoggedIn();
+	                    });
+                    }
+                });
         });
 
         this.get("#/additem", function() {
@@ -522,11 +634,14 @@
 
             var context = this;
             this.id = "main";
-            this.render('templates/main.mustache', {})
+            this.render('templates/main.mustache', {"contentId":"main"})
                 .replace("#main");
 	    this.load("/json/content?id=main", {"json":true,})
 		.render('templates/main.mustache')
-		.replace('#main');
+		.replace('#main')
+		.then(function () {
+                    checkLoggedIn();
+	        });
         });
 
 
@@ -557,17 +672,19 @@
 
         this.bind('update-requests', function() {
             var context = this;
+            if (login.get('user')) {
             // Display categories
-            this.load('/json/newrequests', {"json":true})
-                .then(function(items) {
-                    var count = items.length;
-                    if (context.oldCount != count && count != 0) {
-                        $("#newRequestsAlert").show();
-                    }
-                    context.oldCount = count;
-                    $("#requestNumber").text(count);
-                    setTimeout(function() {context.trigger('update-requests');}, 5000);
-                });
+                this.load('/json/newrequests', {"json":true})
+                    .then(function(items) {
+                        var count = items.length;
+                        if (context.oldCount != count && count != 0) {
+                            $("#newRequestsAlert").show();
+                        }
+                        context.oldCount = count;
+                        $("#requestNumber").text(count);
+                        setTimeout(function() {context.trigger('update-requests');}, 50000);
+                    });
+            }
         });
 
 
