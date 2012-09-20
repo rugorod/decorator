@@ -1,10 +1,15 @@
 <li class="span4">
-  <div class="thumbnail">
+  <div class="thumbnail shadow">
     <form action="#/cart" method="post">
       <input type="hidden" name="id" value="{{ _id }}" />
       <input type="hidden" name="cost" value="{{ cost }}" />
-      <div  class="image-galery" >
-	<a href="/json/image?id={{ _id }}" rel="lightbox"><img src="/json/image?id={{ _id }}"></img></a>
+      <div  class="image-galery hidden-img" >
+      {{#each_hash _attachments}}
+
+      <a rel="lightbox[item{{../_id}}]" href="/json/image?id={{../_id}}&image={{_key}}">
+      <img alt="" src="/json/image?id={{../_id}}&image={{_key}}"></img>
+      </a>
+      {{/each_hash}}
       </div>
       <div class="caption">
 	<div class="story">
@@ -18,7 +23,7 @@
         <div class="tags">
           Тип:
           {{#tags}}
-            <a href="#/categorytag/{{category}}/{{.}}">{{.}}</a>
+            <a href="#/categorytag/{{../category}}/{{.}}">{{.}}</a>
           {{/tags}}
         </div>
 	<p>
@@ -38,7 +43,7 @@
 	    <i class="icon-wrench icon-large" ></i>
 	    Редактировать</a>
           <a class="admin-only btn-small btn btn-warning" href="#/deleteitem/{{category}}/{{ _id }}">
-	    <i class="icon-cart icon-large" ></i>
+	    <i class="icon-cut icon-large" ></i>
 	    Удалить</a>
 	</p>
       </div>

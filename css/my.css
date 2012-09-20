@@ -3,11 +3,19 @@ html {
 }
 
 body {
-
-    font: 12px 'Droid Serif',serif;
+    font: 12px 'Tahoma', cursive;
 }
+
+h1,h3,h3 {
+    font-family: 'Marck Script', cursive;
+}
+
+.navbar-inverse .brand, .navbar-inverse .nav > li > a {
+    font: 20px 'Marck Script', cursive;
+}
+
 .conttext {
-    padding: 10px;
+    padding: 20px;
 }
 
 .bord::before {

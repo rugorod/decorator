@@ -10,8 +10,11 @@
   <form action="/json/additem" method="post" enctype="multipart/form-data">
     <label>Заголовок:</label>
     <input type="text"  name="title" />
+    <label>Тэги:</label>
+    <input type="tags"  name="tags" />
     <label>Описание: </label>
     <textarea rows="6" name="description" />
+
 
     <label>Выберите изображение для загрузки: </label>
     <input type="file" name="image1" />
@@ -22,10 +25,10 @@
       <% } %>
     </select>
 
-    <label>Перечеркнутая цена: </label>
-    <input type="text" name="old_cost" style="text-decoration:line-through;" class=""></input>
+    <label>Перечеркнутая цена (только цифры): </label>
+    <input required type="text" name="old_cost" style="text-decoration:line-through;" class=""></input>
     <label>Цена: </label>
-    <input type="text" name="cost" class="" />
+    <input required type="text" name="cost" class="" />
     <br/>
     <br/>
     <div class="btn-group">

@@ -84,74 +84,28 @@
 
 </form>
 
+<div class="progress progress-striped active">
+  <div class="bar"></div >
+  <div class="percent">0%</div >
+</div>
+<div class="status"> </div>
+<form class="imageform" action="/json/uploadimage" method="post" enctype="multipart/form-data">
+  <input type="hidden" name="id" value="{{ _id }}" />
+  <input type="hidden" name="name" value="1.jpeg" />
+  <input type="file" name="image" alt="выбрать"  value="выбрать"><br />
+  <button class="btn btn-invert" type="submit">Закачать изображение</button>
+</form>
+
 <div class="row">
-  <div class="progress progress-striped active">
-    <div class="bar"></div >
-    <div class="percent">0%</div >
-  </div>
-  <div class="status"> </div>
-  <div class="span4 well">
-    <h2>Изображение1: </h2>
-    <form class="imageform" action="/json/uploadimage" method="post" enctype="multipart/form-data">
-      <input type="hidden" name="id" value="{{ _id }}" />
-      <input type="hidden" name="name" value="1.jpeg" />
-      <input type="file" name="image">
-      <input type="submit" value="Закачать изображение 1">
-    </form>
+{{#each_hash _attachments}}
+  <div class="span4 well" id="image_{{_key}}">
+    <h3>Изображение {{_key}}: </h3>
      <div  class="image-galery2" >
-       <a href="/json/image1?id={{ _id }}" rel="lightbox"><img id="item_img1" class="img-polaroid" src="/json/image1?id={{ _id }}"></img></a>
-      </div>
+       <a href="/json/image?id={{../_id}}&image={{_key}}" rel="lightbox"><img id="item_img1" class="img-polaroid" src="/json/image?id={{../_id}}&image={{_key}}"></img></a>
+     </div>
+     <a href="#/image/delete/{{../_id}}/{{_key}}">удалить</a>
   </div>
+{{/each_hash}}
+</div>
 
-  <div class="span4 well">
-    <h2>Изображение2: </h2>
-    <form class="imageform" action="/json/uploadimage" method="post" enctype="multipart/form-data">
-      <input type="hidden" name="id" value="{{ _id }}" />
-      <input type="hidden" name="name" value="2.jpeg" />
-      <input type="file" name="image"><br>
-      <input type="submit" value="Закачать изображение 2">
-    </form>
-    <div  class="image-galery2" >
-      <a href="/json/image2?id={{ _id }}" rel="lightbox"><img id="item_img2" class="img-polaroid" src="/json/image2?id={{ _id }}"></img></a>
-    </div>
-  </div>
-
-  <div class="span4 well">
-    <h2>Изображение3: </h2>
-    <form class="imageform" action="/json/uploadimage" method="post" enctype="multipart/form-data">
-      <input type="hidden" name="id" value="{{ _id }}" />
-      <input type="hidden" name="name" value="3.jpeg" />
-      <input type="file" name="image"><br>
-      <input type="submit" value="Закачать изображение 1">
-    </form>
-     <div  class="image-galery2" >
-       <a href="/json/image3?id={{ _id }}" rel="lightbox"><img id="item_img3" class="img-polaroid" src="/json/image3?id={{ _id }}"></img></a>
-      </div>
-  </div>
-
-  <div class="span4 well">
-    <h2>Изображение 4: </h2>
-    <form class="imageform" action="/json/uploadimage" method="post" enctype="multipart/form-data">
-      <input type="hidden" name="id" value="{{ _id }}" />
-      <input type="hidden" name="name" value="4.jpeg" />
-      <input type="file" name="image"><br>
-      <input type="submit" value="Закачать изображение 4">
-    </form>
-     <div  class="image-galery2" >
-       <a href="/json/image4?id={{ _id }}" rel="lightbox"><img id="item_img4" class="img-polaroid" src="/json/image4?id={{ _id }}"></img></a>
-      </div>
-  </div>
-
-  <div class="span4 well">
-    <h2>Изображение 5: </h2>
-    <form class="imageform" action="/json/uploadimage" method="post" enctype="multipart/form-data">
-      <input type="hidden" name="id" value="{{ _id }}" />
-      <input type="hidden" name="name" value="5.jpeg" />
-      <input type="file" name="image"><br>
-      <input type="submit" value="Закачать изображение 5">
-    </form>
-     <div  class="image-galery2" >
-       <a href="/json/image5?id={{ _id }}" rel="lightbox"><img id="item_img5" class="img-polaroid" src="/json/image5?id={{ _id }}"></img></a>
-      </div>
-  </div>
 </div>
