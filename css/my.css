@@ -6,8 +6,40 @@ body {
 
     font: 12px 'Droid Serif',serif;
 }
+.conttext {
+    padding: 10px;
+}
+
+.bord::before {
+    background: url(/img/common.png) 0 -1266px no-repeat;
+    content: "";
+    height: 332px;
+    position: absolute;
+    width: 7px;
+}
+
+}
+
+/* fon-transparent */
+
+.trnsp {
+    background: rgba( 0, 0, 0, 0.3);
 
 
+}
+
+
+/* borders */
+.bleft {
+    border-left: 1px solid #444;
+}
+
+/* cool bg venzel */
+.venz {
+
+    background: url(/img/venz1.png) bottom right no-repeat;
+
+}
 
 /*logo*/
 .logo {
