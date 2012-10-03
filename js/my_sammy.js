@@ -18,6 +18,10 @@
 
 
 
+        this.bind('flash', function(e, message) {
+            $('#flashMsg').html(message);
+            $('#flash').fadeIn('slow').delay(5000).fadeOut('slow');
+        });
 
 
 // based on the `#each` helper, requires jQuery (for jQuery.extend)
@@ -74,17 +78,6 @@ Handlebars.registerHelper('attachNames', function(items) {
 });
 
 
-        function newAlert() {
-            var oldTitle = document.title;
-            var msg = "Новый заказ!";
-            var timeoutId = setInterval(function() {
-                document.title = document.title == msg ? ' ' : msg;
-            }, 2000);
-            window.onmousemove = function() {
-                document.title = oldTitle;
-                window.onmousemove = null;
-            };
-        }
 
         var current_user = false;
 
@@ -99,7 +92,6 @@ Handlebars.registerHelper('attachNames', function(items) {
 		if (data == "fail") {
 		    login.clear("user");
                 }
-	    });
             if (login.get('user')) {
                 $('#menu_login').hide();
                 $('#menu_user').show();
@@ -110,6 +102,8 @@ Handlebars.registerHelper('attachNames', function(items) {
                 $('#menu_user').hide();
                 $('.admin-only').hide();
             }
+
+	    });
 
         };
 
@@ -140,30 +134,30 @@ Handlebars.registerHelper('attachNames', function(items) {
                             cat = categories[i];
                         }
                     }
-                    this.load('/json/tagscategory?category=' + category, {"json":true})
+                    this.load('/json/tagscategory?category=' + encodeURIComponent(category), {"json":true})
                         .then(function(tags) {
-                            context.render('/templates/category_content.mustache',
-                                           {"catTitle":cat.catTitle,
-                                            "tags":tags,
-                                            "catId":cat.catId,
-                                            "catContent":cat.catContent,
-                                            "catName":category})
-                                .replace('#premain');
+	                    this.load(link + '?category=' + encodeURIComponent(category), {"json":true})
+		                .then(function(items) {
+		                    $("#main").fadeIn('fast', function() {
+                                        context.render('templates/category.mustache',
+                                                       {"items":items,
+                                                        "tags":tags,
+                                                        "catTitle":cat.catTitle,
+                                                        "tags":tags,
+                                                        "catId":cat.catId,
+                                                        "catContent":cat.catContent,
+                                                        "catName":category})
+			                    .replace('#main')
+			                    .then(function () {
+				                $("#main").fadeIn('fast');
+	                                        $('.nav li').removeClass('active');
+				                $('#cat_' + category).addClass('active');
+                                                checkLoggedIn();
+	                                    });
+		                    });
+	                        });
                         });
 
-	            this.load(link + '?category=' + category, {"json":true})
-		        .then(function(items) {
-		            $("#main").fadeIn('fast', function() {
-                                context.renderEach('templates/item.mustache',items)
-			            .replace('#main')
-			            .then(function () {
-				        $("#main").fadeIn('fast');
-	                                $('.nav li').removeClass('active');
-				        $('#cat_' + category).addClass('active');
-                                        checkLoggedIn();
-	                            });
-		            });
-	                });
 	        });
         });
 
@@ -212,7 +206,7 @@ Handlebars.registerHelper('attachNames', function(items) {
 	this.around(function(callback) {
 	    var context = this;
             app.clearTemplateCache();
-	    $(".alert").alert('close');
+//	    $(".alert").alert('close');
 	    $('.telephone').text("27-87-28");
 	    $('.nav li').removeClass('active');
 	    this.categories = cache.get("categories");
@@ -267,6 +261,7 @@ Handlebars.registerHelper('attachNames', function(items) {
                 //history.back();
                 //context.next(JSON.parse(response));
             });
+            this.redirect("#/edit/" + id);
 	});
 
 	this.get("#/deletereq/:id", function() {
@@ -304,11 +299,22 @@ Handlebars.registerHelper('attachNames', function(items) {
 		});
         });
 
-	this.post("#/edit", function() {
+        this.post("/json/edit", function(){
+            var context = this;
 	    $.post("/json/edit", this.params, function(response) {
-//             context.next(JSON.parse(response));
-           });
-	    this.redirect("#/");
+                context.trigger('flash', "Запись обновлена...");
+                app.runRoute("get", "#/edit/" + context.params['id']);
+                //             context.next(JSON.parse(response));
+            });
+        });
+	this.post("#/edit", function() {
+            var context = this;
+	    $.post("/json/edit", this.params, function(response) {
+                context.trigger('flash', "Запись обновлена...");
+                app.runRoute("get", "#/edit/" + context.params['id']);
+                //             context.next(JSON.parse(response));
+            });
+//	    this.redirect("#/");
 	});
 
         this.get("#/edit_category/:id", function() {
@@ -448,7 +454,11 @@ Handlebars.registerHelper('attachNames', function(items) {
                     if (items == null)
                     {
                         this.render('templates/main.mustache', {"contentId":page})
-                            .replace("#main");
+                            .replace("#main")
+		            .then(function () {
+                                checkLoggedIn();
+	                    });
+
                     } else {
 		        this.render('templates/main.mustache',items)
 		            .replace('#main')
@@ -457,6 +467,7 @@ Handlebars.registerHelper('attachNames', function(items) {
 	                    });
                     }
                 });
+
         });
 
         this.get("#/additem", function() {
@@ -466,15 +477,25 @@ Handlebars.registerHelper('attachNames', function(items) {
 		.replace('#main');
         });
 
-        this.post("#/additem", function() {
+        this.post("#/additem", function(){
             var context = this;
             var category = this.params.category;
-            $.post('/json/additem', this.params, function(data) {
-                // FIXME: добавить уведомление
-                alert(data);
-                context.redirect("#/category/" + category);
+	    $.post("/json/additem", this.params, function(response) {
+                context.trigger('flash', "Запись добавлена.");
+                app.runRoute("get", "#/category/" + category);
+                //             context.next(JSON.parse(response));
             });
         });
+	this.post("/json/additem", function() {
+            var context = this;
+            var category = this.params.category;
+	    $.post("/json/additem", this.params, function(response) {
+                context.trigger('flash', "Запись добавлена.");
+                app.runRoute("get", "#/category/" + category);
+                //             context.next(JSON.parse(response));
+            });
+//	    this.redirect("#/");
+	});
 
         this.get("#/feedbacks", function() {
             var context = this;
@@ -634,9 +655,10 @@ Handlebars.registerHelper('attachNames', function(items) {
 
             var context = this;
             this.id = "main";
+            this.contentId = "main";
             this.render('templates/main.mustache', {"contentId":"main"})
                 .replace("#main");
-	    this.load("/json/content?id=main", {"json":true,})
+	    this.load("/json/content?id=main", {"json":true})
 		.render('templates/main.mustache')
 		.replace('#main')
 		.then(function () {

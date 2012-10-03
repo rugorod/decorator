@@ -20,17 +20,12 @@
   percent.html(percentVal);
   },
   complete: function(xhr) {
-  d = new Date();
-  $("#item_img1").attr("src","/json/image1?id={{ _id }}&tt="+d.getTime());
-  $("#item_img2").attr("src","/json/image2?id={{ _id }}&tt="+d.getTime());
-  $("#item_img3").attr("src","/json/image3?id={{ _id }}&tt="+d.getTime());
-  $("#item_img4").attr("src","/json/image4?id={{ _id }}&tt="+d.getTime());
-  $("#item_img5").attr("src","/json/image5?id={{ _id }}&tt="+d.getTime());
   var percentVal = '100' + '%';
   bar.width(percentVal)
   percent.html(percentVal);
   progressDiv.removeClass("active");
   status.html(xhr.responseText);
+  window.location.reload( true);
   }
   });
 
@@ -40,7 +35,7 @@
 
 <div class="page-header">
   <h1>
-    Редактирование товара
+    Редактирование проекта
     <small>
       Можно добавить дополнительные изображения
     </small>
@@ -48,7 +43,7 @@
 </div>
 
 
-<form  action="/json/edit" method="post" enctype="multipart/form-data">
+<form  action="#/edit" method="post" enctype="multipart/form-data">
   <input type="hidden" name="id" value="{{ _id }}" />
   <label> Заголовок:</label>
   <input type="text"  name="title" value="{{ title }}" />

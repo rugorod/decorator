@@ -26,7 +26,19 @@ h1,h3,h3 {
     width: 7px;
 }
 
+/* item */
+a.thumbnail {
+    height: 100px;
+    width: 100px;
+    position: relative;
+    overflow: hidden;
 }
+
+a.thumbnail img {
+
+}
+
+
 
 /* fon-transparent */
 

@@ -1,16 +1,16 @@
 <div id="addCatModal">
   <div class="page-header">
     <h1>
-      Изменить раздел
+      Изменить категорию
       <small>
-	Редактирование существующего раздела
+	Редактирование существующей категории
       </small>
     </h1>
   </div>
   <form action="#/edit_category/" method="post">
     <input type="hidden" name="catId" value="{{catId}}">
     <input type="hidden" name="catName" value="{{catName}}">
-    <label>Название (русскими буквами, например: Спиртные напитки): </label>
+    <label>Название (русскими буквами, например: Шторы для всех): </label>
     <input type="text"
 	   title="Название должно быть введено"
            x-moz-errormessage="Название должно быть введено"
