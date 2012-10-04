@@ -16,16 +16,28 @@
 
 {{#items}}
 <li class="span2">
+<form action="#/cart" method="post">
+      <input type="hidden" name="id" value="{{ _id }}" />
+      <input type="hidden" name="cost" value="{{ cost }}" />
+
+
   {{#each_hash _attachments}}
 
     <a rel="lightbox[item{{../_id}}]" href="/json/image?id={{../_id}}&image={{_key}}" title="{{../title}}"  class="thumbnail">
       <img class="" alt="" src="/json/image?id={{../_id}}&image={{_key}}"></img>
     </a>
-     <a class="admin-only" href="#/deleteitem/{{category}}/{{ _id }}">
-	    <i class="icon-cut icon-large" ></i>
-	    Удалить</a>
+
 
 
   {{/each_hash}}
+
+  	  <a class="admin-only" href="#/edit/{{_id}}">
+	    <i class="icon-wrench icon-large" ></i>
+	    Правка</a></br>
+	  <a class="admin-only" href="#/deleteitem/{{category}}/{{_id}}">
+	    <i class="icon-cut icon-large" ></i>
+	    Удалить</a>
+
+</form>
 </li>
 {{/items}}
