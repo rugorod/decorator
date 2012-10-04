@@ -472,30 +472,41 @@ Handlebars.registerHelper('attachNames', function(items) {
 
         this.get("#/additem", function() {
             var context = this;
+
             $('#premain').empty();
+            this.trigger('update-catregories');
 	    this.render('templates/additem.template')
 		.replace('#main');
+            // FIXME: update trigger before render
+        });
+
+        this.post("/json/additem", function(){
+            var context = this;
+            var category = this.params.category;
+
+            $("#addform").ajaxSubmit({
+                url: '/json/additem',
+                success: function() {
+                    context.trigger('flash', "Запись добавлена.");
+                    context.redirect("#/category/" + category);
+                    app.runRoute("get", "#/category/" + category);
+                }
+            });
         });
 
         this.post("#/additem", function(){
             var context = this;
             var category = this.params.category;
-	    $.post("/json/additem", this.params, function(response) {
-                context.trigger('flash', "Запись добавлена.");
-                app.runRoute("get", "#/category/" + category);
-                //             context.next(JSON.parse(response));
+
+            $("#addform").ajaxSubmit({
+                url: '/json/additem',
+                success: function() {
+                    context.trigger('flash', "Запись добавлена.");
+                    context.redirect("#/category/" + category);
+                    app.runRoute("get", "#/category/" + category);
+                }
             });
         });
-	this.post("/json/additem", function() {
-            var context = this;
-            var category = this.params.category;
-	    $.post("/json/additem", this.params, function(response) {
-                context.trigger('flash', "Запись добавлена.");
-                app.runRoute("get", "#/category/" + category);
-                //             context.next(JSON.parse(response));
-            });
-//	    this.redirect("#/");
-	});
 
         this.get("#/feedbacks", function() {
             var context = this;

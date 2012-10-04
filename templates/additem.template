@@ -7,7 +7,8 @@
       </small>
     </h1>
   </div>
-  <form action="/json/additem" method="post" enctype="multipart/form-data">
+
+  <form id="addform" action="/json/additem" method="post" enctype="multipart/form-data">
     <label>Заголовок:</label>
     <input type="text"  name="title" />
     <label>Тэги:</label>
@@ -36,4 +37,9 @@
       <button type="submit" class="btn btn-primary btn-large"> Добавить</button>
     </div>
   </form>
+<div class="progress progress-striped active">
+  <div class="bar"></div >
+  <div class="percent">0%</div >
+</div>
+<div class="status"> </div>
 </div>
