@@ -26,10 +26,8 @@
       <% } %>
     </select>
 
-    <label>Перечеркнутая цена (только цифры): </label>
-    <input required type="text" name="old_cost" style="text-decoration:line-through;" class=""></input>
-    <label>Цена: </label>
-    <input required type="text" name="cost" class="" />
+    <input required type="text" value="1" name="old_cost" style="text-decoration:line-through;" class="hidden"></input>
+    <input required type="text" value="1" name="cost" class="hidden" />
     <br/>
     <br/>
     <div class="btn-group">
@@ -37,9 +35,5 @@
       <button type="submit" class="btn btn-primary btn-large"> Добавить</button>
     </div>
   </form>
-<div class="progress progress-striped active">
-  <div class="bar"></div >
-  <div class="percent">0%</div >
-</div>
 <div class="status"> </div>
 </div>
