@@ -23,8 +23,8 @@
 }
 /* line 24, ../sass/lightbox.sass */
 #lightbox img {
-  width: auto;
-  height: auto;
+    width: auto;
+    height: auto;
 }
 /* line 27, ../sass/lightbox.sass */
 #lightbox a img {
@@ -44,6 +44,7 @@
   -ms-border-radius: 4px;
   -o-border-radius: 4px;
   border-radius: 4px;
+  max-width: 80%;
 }
 /* line 38, ../../../../.rvm/gems/ruby-1.9.2-p290/gems/compass-0.12.1/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
 .lb-outerContainer:after {
@@ -55,6 +56,7 @@
 /* line 39, ../sass/lightbox.sass */
 .lb-container {
   padding: 10px;
+  max-width: 100%;
 }
 
 /* line 42, ../sass/lightbox.sass */
@@ -179,3 +181,22 @@
 .lb-data .lb-close:hover {
   cursor: pointer;
 }
+
+
+/*@media (min-width: 768px) and (max-width: 979px) {
+    .lb-container {
+	max-width: 100%;
+}
+
+.lb-outerContainer {
+	max-width: 80%;
+	max-height: 100%;
+}
+
+}
+
+@media (max-width: 767px) {
+    .lb-container {
+	max-width: 750px;
+}
+}*/
