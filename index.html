@@ -31,18 +31,17 @@
 
   <body>
     <div class="container">
- <img class="head-img" src="/img/img1.jpg"/>
-    <div class="navbar navbar-inverse">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+      <img class="head-img" src="/img/img1.jpg"/>
+      <div class="navbar navbar-inverse">
+	<div class="navbar-inner">
+          <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="/">Почерк декоратора</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
+            </a>
+            <div class="nav-collapse collapse">
+              <ul class="nav">
               <li id="menu_main"><a href="#">Главная</a></li>
 
               <li id="menu_contacts"><a href="#/page/contacts">Контакты</a></li>
@@ -56,7 +55,10 @@
 		  Вход
 		</a>
 	      </li>
-	      <li class="dropdown admin-only">
+	      <li id="menu_about">
+		<a href="#/page/about" >Интерьерный бутик «Винтаж»</a>
+	      </li>
+	      <li class="dropdown admin-only pull-right">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Управление<b class="caret"></b></a>
 		<ul class="dropdown-menu" >
 		  <li><a href="#/additem"><i class="icon-pencil"></i>Добавить проект</a></li>
@@ -64,10 +66,6 @@
 		  <li><a href="#/logout"><i class="icon-lock"></i>Выйти</a></li>
 		</ul>
 	      </li>
-	      <li id="menu_about">
-		<a href="#/page/about" class="pull-right">Интерьерный бутик «Винтаж»</a>
-	      </li>
-
             </ul>
           </div><!--/.nav-collapse -->
         </div>
